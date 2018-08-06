@@ -7,6 +7,8 @@
 import requests
 import re
 import json
+import time
+from requests.exceptions import RequestException
 
 
 # 抓取首页
@@ -15,11 +17,13 @@ def get_one_page(url):
         'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) '
                       'Chrome/68.0.3440.84 Safari/537.36'
     }
-    response = requests.get(url, headers=headers)
-    if response.status_code == 200:
-        return response.text
-    return None
-
+    try:
+        respone=requests.get(url,headers=headers)
+        if respone.status_code==200:
+            return respone.text
+        return None
+    except RequestException:
+        return None
 
 # 正则提取
 def parse_one_page(html):
@@ -38,7 +42,7 @@ def parse_one_page(html):
 
 #写入文件
 def write_to_file(content):
-    with open('maoyan_movies_top1001.txt','a',encoding='utf-8') as f:
+    with open('maoyan_movies_top100.txt','a',encoding='utf-8') as f:
         #print(type(json.dumps(content)))
         f.write(json.dumps(content,ensure_ascii=False)+'\n')
 
@@ -55,3 +59,4 @@ if __name__ == '__main__':
     #分页爬取，修改offset的偏移量
     for i in range(10):
         main(i*10)
+        time.sleep(1)  #猫眼多了反爬虫，如果速度过快则会无响应，所有增加一个延时等待
