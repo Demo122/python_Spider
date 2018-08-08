@@ -4,14 +4,21 @@
 @author:DQ
 @time:2018/8/8 14:32
 """
-# from requests.exceptions import RequestException
-import requests
-import re
+
 import os
-from progressbar import *  # 用于显示进度条
+import re
+import requests
+from tqdm import tqdm
+import sys
+import threading
+
+# from progressbar import *  # 用于显示进度条
+# from requests.exceptions import RequestException
+
+reload(sys)
+sys.setdefaultencoding("utf-8")
 
 
-# from tqdm import tqdm
 # import time
 
 # global number  #定义全局变量
@@ -79,38 +86,50 @@ def download_film(down_url, path):
     url = down_url[0][3]
     response_mp4 = requests.get(url, stream=True)
     content_size = int(response_mp4.headers['Content-Length']) / 1024  # 计算文件的总大小
-
     # 创建分类文件夹
     path_kind = path.strip('\\' + down_url[0][0] + '.mp4')
     if not os.path.exists(path_kind):  # 检验分类文件夹啊是否存在
         os.mkdir(path_kind)
+    # 显示进度条方法一： 使用progressbar显示进度条
+    # widgets = [down_url[0][0],  # 设置当前进度条前的显示的文字
+    #            Percentage(), '',  # 显示百分比
+    #            Bar('#'), '',  # 设置进度条形状
+    #            Timer(), '',  # 显示已用时间
+    #            ETA(), '',  # 显示预计剩余时间
+    #            FileTransferSpeed()
+    #            ]
+    # progress = ProgressBar(widgets=widgets, maxval=10 * content_size).start()
+    # with open(path.decode('utf-8'), 'wb') as film:
+    #     for data in response_mp4.iter_content(1024):
+    #         if data:
+    #             film.write(data)
+    #             progress.update(10 * 1024 + 1)
+    # progress.finish()
 
-    #使用progressbar显示进度条
-    widgets=[down_url[0][0],    #设置当前进度条前的显示的文字
-             Percentage(), '',  #显示百分比
-             Bar('#'),'',       #设置进度条形状
-             Timer(),'',        #显示已用时间
-             ETA(),'',          #显示预计剩余时间
-             FileTransferSpeed()
-             ]
-    progress=ProgressBar(widgets=widgets,maxval=10*content_size).start()
+    # 实现进度条方法二，使用tqdm
     print("{}开始下载....".format(down_url[0][0]))
-    with open(path, 'wb') as film:
-        # 实现进度条方法一，使用tqdm
-        # for data in tqdm(iterable=response_mp4.iter_content(chunk_size=1024),total=content_size,unit='k'):
-        for data in response_mp4.iter_content(1024):
+    with open(path.decode('utf-8'), 'wb') as film:
+        for data in tqdm(iterable=response_mp4.iter_content(chunk_size=1024), total=content_size, unit='k'):
             if data:
                 film.write(data)
-                progress.update(10*1024+1)
     print('下载完成！')
+
+
+# 多线程并行下载
+# def thread_down(thread_num, target, down_url, path):
+#     for i in range(thread_num):
+#         t = threading.Thread(target=target, args=(down_url, path))
+#         t.setDaemon(True)
+#         t.start()
 
 
 if __name__ == '__main__':
 
     URLs = get_pages_url()
+    URLS = URLs[:3]
     for url in bulid_filmPage_url(URLs):
         down_url = get_down_url(url)
-        path = "E:\python_code\Spider_films\\{}\\{}.mp4".format(down_url[0][1], down_url[0][0])
+        path = "E:\python_code\Spider_films\\{}\\{}.mp4".format(down_url[0][1], down_url[0][0]).encode('utf-8')
         download_film(down_url, path)
         # path_kind = path.strip('\\'+down_url[0][0] + '.mp4')
         # print(path_kind)
