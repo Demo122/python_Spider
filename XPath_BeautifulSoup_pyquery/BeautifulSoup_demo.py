@@ -286,3 +286,114 @@ from bs4 import BeautifulSoup
 
 #find()
 # 除了find_all()方法，还有find()方法，只不过后者返回的是单个元素，也就是第一个匹配的元素，而前者返回的是所有匹配的元素组成的列表
+# html='''
+# <div class="panel">
+#     <div class="panel-heading">
+#         <h4>Hello</h4>
+#     </div>
+#     <div class="panel-body">
+#         <ul class="list" id="list-1">
+#             <li class="element">Foo</li>
+#             <li class="element1">Bar</li>
+#             <li class="element">Jay</li>
+#         </ul>
+#         <ul class="list list-small" id="list-2">
+#             <li class="element">Foo</li>
+#             <li class="element">Bar</li>
+#         </ul>
+#     </div>
+# </div>
+# '''
+# soup = BeautifulSoup(html, 'lxml')
+# print(soup.find(name='ul'))
+# print(type(soup.find(name='ul')))
+# print(soup.find(class_='list'))
+#这里的返回结果不再是列表形式，而是第一个匹配的节点元素，类型依然是Tag类型。
+
+#另外，还有许多查询方法，其用法与前面介绍的find_all()、find()方法完全相同，只不过查询范围不同，这里简单说明一下。
+# find_parents()和find_parent()：前者返回所有祖先节点，后者返回直接父节点。
+# print(soup.li.find_parents())
+
+# find_next_siblings()和find_next_sibling()：前者返回后面所有的兄弟节点，后者返回后面第一个兄弟节点。
+# print(soup.li.find_next_sibling())
+
+# find_previous_siblings()和find_previous_sibling()：前者返回前面所有的兄弟节点，后者返回前面第一个兄弟节点。
+# print(soup.find(attrs={'class':'element1'}).find_previous_sibling())
+
+# find_all_next()和find_next()：前者返回节点后所有符合条件的节点，后者返回第一个符合条件的节点。
+# print(soup.li.find_all_next(name='ul'))
+
+# find_all_previous()和find_previous()：前者返回节点前所有符合条件的节点，后者返回第一个符合条件的节点。
+# print(soup.ul.find_previous(name='div'))
+
+
+
+#-------------------------CSS选择器------------------------------
+#使用CSS选择器时，只需要调用select()方法，传入相应的CSS选择器即可，示例如下：
+html='''
+<div class="panel">
+    <div class="panel-heading">
+        <h4>Hello</h4>
+    </div>
+    <div class="panel-body">
+        <ul class="list" id="list-1">
+            <li class="element">Foo</li>
+            <li class="element">Bar</li>
+            <li class="element">Jay</li>
+        </ul>
+        <ul class="list list-small" id="list-2">
+            <li class="element">Foo</li>
+            <li class="element">Bar</li>
+        </ul>
+    </div>
+</div>
+'''
+soup = BeautifulSoup(html, 'lxml')
+# print(soup.select('.panel .panel-heading'))
+# print(soup.select('ul li'))
+# print(soup.select('#list-2 .element'))
+# print(type(soup.select('ul')[0]))
+#返回的结果均是符合CSS选择器的节点组成的列表
+
+#嵌套选择
+#select()方法同样支持嵌套选择。例如，先选择所有ul节点，再遍历每个ul节点，选择其li节点，样例如下：
+# for ul in soup.select('ul'):
+#     print(ul.select('li'))
+# [<li class="element">Foo</li>, <li class="element">Bar</li>, <li class="element">Jay</li>]
+# [<li class="element">Foo</li>, <li class="element">Bar</li>]
+#可以看到，这里正常输出了所有ul节点下所有li节点组成的列表。
+
+#获取属性
+#我们知道节点类型是Tag类型，所以获取属性还可以用原来的方法。仍然是上面的HTML文本，这里尝试获取每个ul节点的id属性
+# for ul in soup.select('ul'):
+#     print(ul['id'])
+#     print(ul.attrs['id'])
+# list-1
+# list-1
+# list-2
+# list-2
+#直接传入中括号和属性名，以及通过attrs属性获取属性值，都可以成功。
+
+#获取文本
+#要获取文本，当然也可以用前面所讲的string属性。此外，还有一个方法，那就是get_text()
+for li in soup.select('li'):
+    print('get_text():',li.get_text())
+    print('string:',li.string)
+
+# get_text(): Foo
+# string: Foo
+# get_text(): Bar
+# string: Bar
+# get_text(): Jay
+# string: Jay
+# get_text(): Foo
+# string: Foo
+# get_text(): Bar
+# string: Bar
+#二者的效果完全一致。
+
+#到此，Beautiful Soup的用法基本就介绍完了，最后做一下简单的总结。
+    # 推荐使用lxml解析库，必要时使用html.parser。
+    # 节点选择筛选功能弱但是速度快。
+    # 建议使用find()或者find_all()查询匹配单个结果或者多个结果。
+    # 如果对CSS选择器熟悉的话，可以使用select()方法选择。
