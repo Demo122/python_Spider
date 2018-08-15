@@ -51,7 +51,7 @@ import csv
 #     writer = csv.DictWriter(csvfile, fieldnames=fieldnames)
 #     writer.writerow({'id': '10005', 'name': '王伟', 'age': 22})
 
-#如果接触过pandas等库的话，可以调用DataFrame对象的to_csv()方法来将数据写入CSV文件中。
+
 
 #2. 读取
 #这里我们构造的是Reader对象，通过遍历输出了每行的内容，每一行都是一个列表形式。注意，如果CSV文件中包含中文的话，还需要指定文件编码。
@@ -61,8 +61,14 @@ import csv
 #         print(row)
 
 
+#如果接触过pandas等库的话，可以调用DataFrame对象的to_csv()方法来将数据写入CSV文件中。
 #如果接触过pandas的话，可以利用read_csv()方法将数据从CSV中读取出来，
 # import pandas
+#
+# header=['id','name','age']
+# data=[['10001', 'Mike', 20], ['10002', 'Bob', 22], ['10003', 'Jordan', 21]]
+# pd=pandas.DataFrame(data,columns=header)
+# pd.to_csv('data.csv',encoding='utf-8')
 #
 # data=pandas.read_csv('data.csv')
 # print(data)
