@@ -14,7 +14,8 @@ import requests
 base_url = 'https://m.weibo.cn/api/container/getIndex?'
 headers = {
     'Host': 'm.weibo.cn',
-    'Refer': 'https://m.weibo.cn/u/2830678474',
+    # 'Refer': 'https://m.weibo.cn/u/2830678474',
+    'Reder':'https://m.weibo.cn/p/1005055189576388',
     'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/68.0.3440.106 Safari/537.36',
     'X-Requested-With': 'XMLHttpRequest'
 }
@@ -22,9 +23,9 @@ headers = {
 
 def get_page(page):
     params = {
-        'type': 'uid',
-        'value': '2830678474',
-        'containerid': '1076032830678474',
+        # 'type': 'uid',
+        # 'value': '2830678474',
+        'containerid': '1076035189576388',
         'page': page
     }
     url = base_url + urlencode(params)
