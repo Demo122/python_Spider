@@ -81,7 +81,7 @@ def main(offset):
 
 
 GROUP_START = 1
-GROUP_END = 1
+GROUP_END = 20
 
 if __name__ == '__main__':
     time_start = time.time()
