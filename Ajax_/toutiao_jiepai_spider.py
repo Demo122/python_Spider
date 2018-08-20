@@ -77,10 +77,11 @@ def main(offset):
     for item in get_image_url(json):
         if save_images(item):
             number += 1
+    return number
 
 
 GROUP_START = 1
-GROUP_END = 20
+GROUP_END = 1
 
 if __name__ == '__main__':
     time_start = time.time()
@@ -93,5 +94,5 @@ if __name__ == '__main__':
     # for offset in range(0,400,20):
     #     main(offset)
     time_end = time.time()
-    print('\n共下载美图%d部'%number[0])
+    print('\n共下载美图%d部'%sum(number))
     print('\n共耗时:{}s'.format(time_end - time_start))
