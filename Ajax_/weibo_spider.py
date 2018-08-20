@@ -33,8 +33,8 @@ def get_page(page):
         response = requests.get(url, headers=headers)
         if response.status_code == 200:
             return response.json()
-    except requests.ConnectionError as e:
-        print('Error:', e.args)
+    except requests.ConnectionError:
+        return None
 
 
 def parse_page(json):
