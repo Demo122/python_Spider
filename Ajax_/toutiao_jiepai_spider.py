@@ -53,7 +53,9 @@ def save_images(item):
     if not os.path.exists(base_path):
         os.mkdir(base_path)  # 创建图片文件夹
     try:
-        response = requests.get('https:'+item.get('image_url'))
+        #查看了网页，将爬取的图片链接中的'list'替换为'origin'以下载高清美图
+        image_origin_url = 'https:' + item.get('image_url').replace('list', 'origin')
+        response = requests.get(image_origin_url)
         if response.status_code == 200:
             file_path = '{0}/{1}.{2}'.format(base_path, md5(response.content).hexdigest(), 'jpg')
             if not os.path.exists(file_path):
