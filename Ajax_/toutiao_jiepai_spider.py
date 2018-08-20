@@ -65,7 +65,7 @@ def save_images(item):
                     return True
             else:
                 print('Already Download ', file_path)
-    except (requests.ConnectionError, requests.ConnectTimeout) as e:
+    except requests.exceptions.RequestException as e:
         print(e.args)
         print('Failed to save images!')
         return False
