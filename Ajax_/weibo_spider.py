@@ -7,6 +7,7 @@
 
 # from pymongo import MongoClient
 
+from collections import Iterable
 from pyquery import PyQuery as pq
 from urllib.parse import urlencode
 import requests
@@ -42,7 +43,7 @@ def parse_page(json):
         items = json.get('data').get('cards')
         for item in items:
             item = item.get('mblog')
-            if isinstance(item, dict):
+            if isinstance(item,Iterable):
                 weibo = {}
                 weibo['id'] = item.get('id')
                 weibo['created_at'] = item.get('created_at')
